@@ -8,17 +8,16 @@ import codecs
 
 dynamodb = boto3.resource('dynamodb')
 s3 = boto3.resource('s3')
-tableName = os.environ['table']
-bucket = os.environ['bucket']
+bucket = s3.Bucket('logantoler')
 key = 'us.csv'
-#key2 = 'jh.csv'
+tableName = 'CovidDate'
 
 
 def extract():
    urlNYT = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv'
    urlJH = 'https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv'
 
-   transform()
+   transform(urlNYT, urlJH)
 
 
 def transform(urlNYT, urlJH):
@@ -38,22 +37,15 @@ def transform(urlNYT, urlJH):
 
    covidTable = StringIO()
    NYTtoJH.to_csv(covidTable)
-   begin_load()
+   s3.Bucket('logantoler').put_object(Key = 'us.csv', Body=covidTable.getvalue())
    
+   begin_load()
 
-#def lambda_handler(event, context):
-#   s3.Bucket(bucket).put_object(Key = 'us.csv', Body=dataNYT)
-#   s3.Bucket(bucket).put_object(Key = 'jh.csv', Body=dataJH)
-
-#   begin_load()
-
-def begin_load(covidTable):
-   # get() does not store in memory
+def begin_load():
    try:
-      obj1 = covidTable
-      #obj2 = s3.Object(BucketName, key2).get()['Body']
+      obj1 = s3.Object('logantoler', key).get()['Body']
    except:
-      print("S3 Object could not be opened. Check environment variable.")
+      print("error happened at upload")
    try:
       table = dynamodb.Table(tableName)
    except:
@@ -93,12 +85,12 @@ def write_to_dynamo(rows):
 
 
 
-#def main():
-#    lambda_handler()
+def main():
+    extract()
 
 
-#if __name__ == '__main__':
-#    main()
+if __name__ == '__main__':
+    main()
 
 
 

@@ -35,11 +35,11 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions: 
-        - AttributeName: date
+        - AttributeName: Date
           AttributeType: S
       BillingMode: PROVISIONED
       KeySchema: 
-        - AttributeName: date
+        - AttributeName: Date
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 1
