@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Event-driven Python. Performs ETL job on two Covid-19 data sources to combine into single dashboard 
+
+Globals:
+  #https://github.com/awslabs/serverless-application-model/blob/develop/docs/globals.rst
+  Function:
+    Runtime: python3.8
+    Timeout: 120
+    Environment:
+      Variables:
+        table: !Ref dataNYTcovid
+        bucket: !Ref CovidDataStorage
+
+Resources:
+  etlFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+      Handler: app.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref dataNYTcovid
+        - S3ReadPolicy:
+            BucketName: !Ref CovidDataStorage
+        - S3WritePolicy:
+            BucketName: !Ref CovidDataStorage
+      Events:
+        Schedule2:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes) #change when entered into master
+
+  dataNYTcovid:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions: 
+        - AttributeName: date
+          AttributeType: S
+      BillingMode: PROVISIONED
+      KeySchema: 
+        - AttributeName: date
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+  
+  CovidDataStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: "etlFunction"
+          Value: "CovidDataStorage"
+    
+  
+
+  
+    
