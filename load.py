@@ -1,43 +1,33 @@
-def begin_load(covidTable):
-   # get() does not store in memory
-   try:
-      obj1 = covidTable
-      #obj2 = s3.Object(BucketName, key2).get()['Body']
-   except:
-      print("S3 Object could not be opened. Check environment variable.")
-   try:
-      table = dynamodb.Table(tableName)
-   except:
-      print("Error loading DynamoDB table. Check if table was created correctly and environment variable.")
+import boto3
+import pandas as pd
+import os
+import json
+from decimal import Decimal
 
-   batch_size = 100
-   batch = []
+from boto3.dynamodb.conditions import Attr
+from botocore.exceptions import ClientError
 
-   # DictReader is a generator; not stored in memory
-   for row in csv.DictReader(codecs.getreader('utf-8')(obj1)):
-      if len(batch) >= batch_size:
-         write_to_dynamo(batch)
-         batch.clear()
-
-      batch.append(row)
-
-   if batch:
-      write_to_dynamo(batch)
-   return {
-      'statusCode': 200,
-      'body': json.dumps('Uploaded to DynamoDB Table')
-   }
+dynamodb = boto3.resource('dynamodb')
+tableName = os.environ['table']
 
 
-def write_to_dynamo(rows):
-   try:
-      table = dynamodb.Table(tableName)
-   except:
-      print("Error loading DynamoDB table. Check if table was created correctly and environment variable.")
-
-   try:
-      with table.batch_writer() as batch:
-         for i in range(len(rows)):
-            batch.put_item(Item=rows[i])
-   except:
-      print("Error executing batch_writer")
+def to_dynamo(covid_df):
+    try:
+        table = dynamodb.Table(tableName)
+    except:
+        print("Error loading DynamoDB table. Check if table was created correctly and environment variable.")
+    try:
+        with table.batch_writer() as batch:
+            for index, item in covid_df.iterrows():
+                item = json.loads(item.to_json(), parse_float=(
+                    lambda s: Decimal(str(s))))
+                try:
+                    batch.put_item(
+                        Item=item)
+                except ClientError as e:
+                    if e.response['Error']['Code'] == 'ConditionalCheckFailedException': #item already exists
+                        print("ConditionalCheckFailedException: {}".format(
+                            item['Date']))
+                        continue
+    except:
+        print("Error with put/batch_writer")

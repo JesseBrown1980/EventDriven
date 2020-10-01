@@ -21,10 +21,6 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref dataNYTcovid
-        - S3ReadPolicy:
-            BucketName: !Ref CovidDataStorage
-        - S3WritePolicy:
-            BucketName: !Ref CovidDataStorage
       Events:
         Schedule2:
           Type: Schedule
@@ -41,16 +37,6 @@ Resources:
       KeySchema: 
         - AttributeName: Date
           KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
-  
-  CovidDataStorage:
-    Type: AWS::S3::Bucket
-    Properties:
-      Tags:
-        - Key: "etlFunction"
-          Value: "CovidDataStorage"
     
   
 
