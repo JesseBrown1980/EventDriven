@@ -1,13 +1,8 @@
-#import boto3
-#import os
 import transform
 import load
 
-#dynamodb = boto3.resource('dynamodb')
-#tableName = os.environ['table']
-#bucket = os.environ['bucket']
 
-def app():
+def lambda_handler(event, context):
 
     nyt_url = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv'
     jh_url = 'https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv'
@@ -18,7 +13,7 @@ def app():
 
 
 def main():
-    app()
+    lambda_handler()
 
 
 if __name__ == '__main__':

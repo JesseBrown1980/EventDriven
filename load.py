@@ -17,17 +17,16 @@ def to_dynamo(covid_df):
     except:
         print("Error loading DynamoDB table. Check if table was created correctly and environment variable.")
     try:
-        with table.batch_writer() as batch:
-            for index, item in covid_df.iterrows():
-                item = json.loads(item.to_json(), parse_float=(
-                    lambda s: Decimal(str(s))))
-                try:
-                    batch.put_item(
-                        Item=item)
-                except ClientError as e:
-                    if e.response['Error']['Code'] == 'ConditionalCheckFailedException': #item already exists
-                        print("ConditionalCheckFailedException: {}".format(
-                            item['Date']))
-                        continue
+        for index, item in covid_df.iterrows():
+            item = json.loads(item.to_json(), parse_float=(
+                lambda s: Decimal(str(s))))
+            try:
+                table.put_item(
+                    Item=item, ConditionExpression=Attr('Date').not_exists())
+            except ClientError as e:
+                if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                    print("ConditionalCheckFailedException: {}".format(
+                        item['Date']))
+                    continue
     except:
         print("Error with put/batch_writer")

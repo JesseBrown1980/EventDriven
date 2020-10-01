@@ -10,7 +10,6 @@ Globals:
     Environment:
       Variables:
         table: !Ref dataNYTcovid
-        bucket: !Ref CovidDataStorage
 
 Resources:
   etlFunction:
@@ -25,7 +24,7 @@ Resources:
         Schedule2:
           Type: Schedule
           Properties:
-            Schedule: rate(5 minutes) #change when entered into master
+            Schedule: cron(0 16 * * ? *)
 
   dataNYTcovid:
     Type: AWS::DynamoDB::Table
@@ -33,10 +32,12 @@ Resources:
       AttributeDefinitions: 
         - AttributeName: Date
           AttributeType: S
-      BillingMode: PROVISIONED
       KeySchema: 
         - AttributeName: Date
           KeyType: HASH
+      ProvisionedThroughput: #in free tier limits
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
     
   
 
