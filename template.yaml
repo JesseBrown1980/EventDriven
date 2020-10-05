@@ -6,27 +6,31 @@ Globals:
   #https://github.com/awslabs/serverless-application-model/blob/develop/docs/globals.rst
   Function:
     Runtime: python3.8
-    Timeout: 120
+    Timeout: 20
     Environment:
       Variables:
-        table: !Ref dataNYTcovid
+        table: !Ref CovidData
+        bucket: !Ref CovidDataStorage
 
 Resources:
   etlFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      MemorySize: 192
       CodeUri: ./
       Handler: app.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !Ref dataNYTcovid
+            TableName: !Ref CovidData
+        - S3CrudPolicy:
+            BucketName: !Ref CovidDataStorage
       Events:
         Schedule2:
           Type: Schedule
           Properties:
-            Schedule: cron(0 16 * * ? *)
+            Schedule: rate(25 minutes) #cron(0 16 * * ? *)
 
-  dataNYTcovid:
+  CovidData:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions: 
@@ -38,8 +42,11 @@ Resources:
       ProvisionedThroughput: #in free tier limits
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-    
-  
 
-  
+  CovidDataStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: "etlFunction"
+          Value: "CovidDataStorage"
     

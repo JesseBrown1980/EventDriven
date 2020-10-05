@@ -29,4 +29,4 @@ def to_dynamo(covid_df):
                         item['Date']))
                     continue
     except:
-        print("Error with put/batch_writer")
+        print("Error with put_item")
