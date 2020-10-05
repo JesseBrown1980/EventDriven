@@ -12,23 +12,57 @@ Globals:
         table: !Ref CovidData
         bucket: !Ref CovidDataStorage
 
+Parameters:
+  ArtifactsBucket:
+    Type: String
+
 Resources:
   etlFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      MemorySize: 192
+      MemorySize: 256
       CodeUri: ./
-      Handler: app.lambda_handler
+      Handler: extract.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref CovidData
         - S3CrudPolicy:
             BucketName: !Ref CovidDataStorage
       Events:
-        Schedule2:
+        Schedule1:
           Type: Schedule
           Properties:
-            Schedule: rate(25 minutes) #cron(0 16 * * ? *)
+            Schedule: cron(0 16 * * ? *)
+
+  CovidTotalsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      MemorySize: 192
+      CodeUri: ./
+      Handler: totals.lambda_handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref CovidDataStorage
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+            RestApiId: 
+              Ref: CovidTotalsApi
+
+  CovidTotalsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      EndpointConfiguration: Regional
+      StageName: prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: s3://logantoler/totals-openapi.yaml
+      OpenApiVersion: 3.0.1
 
   CovidData:
     Type: AWS::DynamoDB::Table

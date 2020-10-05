@@ -28,18 +28,3 @@ def by_month(to_dash):
                              dpi=150, bbox_inches='tight')
 
     return comparison
-
-
-def total_cases(to_dash):
-    cases = to_dash.Cases.iat[-1]
-    return cases
-
-
-def total_recovered(to_dash):
-    recovered = to_dash.Recovered.iat[-1]
-    return recovered
-
-
-def total_deaths(to_dash):
-    deaths = to_dash.Deaths.iat[-1]
-    return deaths
