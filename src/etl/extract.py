@@ -1,8 +1,7 @@
 import json
 import transform
 import load
-from dashboard import graph
-from dashboard import save
+import save
 
 
 def lambda_handler(event, context):
@@ -11,12 +10,8 @@ def lambda_handler(event, context):
 
     covid_df = transform.modify(nyt_url, jh_url)
 
-    # create dashboard data
+    # save df for dashboard data
     save.df_to_s3(covid_df)
-    covid_csv = save.get_s3()
-    to_dash = graph.transform(covid_csv)
-    comparison = graph.by_month(to_dash)
-    save.graph_to_s3(comparison)
 
     # push data to DynamoDB
     covid_dynamo = load.to_dynamo(covid_df)

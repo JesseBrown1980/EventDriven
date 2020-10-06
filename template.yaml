@@ -21,12 +21,12 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       MemorySize: 256
-      CodeUri: ./
+      CodeUri: src/etl
       Handler: extract.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref CovidData
-        - S3CrudPolicy:
+        - S3WritePolicy:
             BucketName: !Ref CovidDataStorage
       Events:
         Schedule1:
@@ -38,10 +38,10 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       MemorySize: 192
-      CodeUri: ./
-      Handler: totals.lambda_handler
+      CodeUri: src/dashboard
+      Handler: make_dash.lambda_handler
       Policies:
-        - S3ReadPolicy:
+        - S3CrudPolicy:
             BucketName: !Ref CovidDataStorage
       Events:
         Api1:
