@@ -1,4 +1,5 @@
 import pandas as pd
+import notification
 
 
 def modify(nyt_url, jh_url):
@@ -9,7 +10,10 @@ def modify(nyt_url, jh_url):
                              dtype={'Cases': 'Int64', 'Deaths': 'Int64'})
         nyt_df['Date'] = pd.to_datetime(nyt_df['Date'], format="%Y-%m-%d")
     except:
-        print("Error with NYT link")
+        alert = "Error with NYT link"
+        notification.send_sns(alert)
+        print(alert)
+        
 
     try:
         jh_df = pd.read_csv(jh_url,
@@ -19,7 +23,9 @@ def modify(nyt_url, jh_url):
         jh_df.rename(columns={'Country/Region': 'Country'}, inplace=True)
         jh_df['Date'] = pd.to_datetime(jh_df['Date'], format="%Y-%m-%d")
     except:
-        print("Error with JH link")
+        alert = "Error with JH link"
+        notification.send_sns(alert)
+        print(alert)
 
     try:
         jh_us_filter = jh_df[jh_df.Country == 'US']
@@ -29,4 +35,6 @@ def modify(nyt_url, jh_url):
         covid_df['Date'] = covid_df['Date'].dt.strftime('%Y-%m-%d')
         return covid_df
     except:
-        print("Error joining data")
+        alert = "Error joining data"
+        notification.send_sns(alert)
+        print(alert)

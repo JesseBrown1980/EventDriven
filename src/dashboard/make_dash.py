@@ -1,7 +1,9 @@
+import json
+
 import save
 import make_graph
 import total_calc
-import json
+
 
 def lambda_handler(event, context):
 
@@ -14,6 +16,13 @@ def lambda_handler(event, context):
     to_dash = total_calc.transform(covid_csv)
     totals = total_calc.total_numbers(to_dash)
 
-
-    #expose return total values to api
+    # expose return total values to api
     return json.dumps([{"total": total} for total in totals])
+
+
+def main():
+    lambda_handler()
+
+
+if __name__ == '__main__':
+    main()

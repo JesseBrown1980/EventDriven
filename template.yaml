@@ -11,6 +11,7 @@ Globals:
       Variables:
         table: !Ref CovidData
         bucket: !Ref CovidDataStorage
+        sns_topic_arn: !Ref AlertSNS 
 
 Parameters:
   ArtifactsBucket:
@@ -28,6 +29,8 @@ Resources:
             TableName: !Ref CovidData
         - S3WritePolicy:
             BucketName: !Ref CovidDataStorage
+        - SNSCrudPolicy:
+            TopicName: !GetAtt AlertSNS.TopicName
       Events:
         Schedule1:
           Type: Schedule
@@ -43,6 +46,8 @@ Resources:
       Policies:
         - S3CrudPolicy:
             BucketName: !Ref CovidDataStorage
+        - SNSCrudPolicy:
+            TopicName: !GetAtt AlertSNS.TopicName
       Events:
         Api1:
           Type: Api
@@ -83,4 +88,9 @@ Resources:
       Tags:
         - Key: "etlFunction"
           Value: "CovidDataStorage"
+  
+  AlertSNS:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: Covid Functions Alert
     
