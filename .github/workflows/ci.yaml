@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - master
-      - '!master/unit test/**'
-      - '!master/api outputs/**'
-      - '!master/README.md'
-      - '!master/.git**'
+    paths-ignore:
+      - 'unit tests/**'
+      - 'api outputs/**'
+      - '**.md'
+      - '**.git**'
 
 jobs:
   deploy:
