@@ -13,7 +13,6 @@ def modify(nyt_url, jh_url):
         alert = "Error with NYT link"
         notification.send_sns(alert)
         print(alert)
-        
 
     try:
         jh_df = pd.read_csv(jh_url,

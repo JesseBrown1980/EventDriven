@@ -10,7 +10,6 @@ key = 'CovidData.csv'
 key2 = 'comparison.jpeg'
 
 
-
 def graph_to_s3(comparison):
     try:
         s3.Object(bucketName, key2).upload_file('/tmp/comparison.jpeg')

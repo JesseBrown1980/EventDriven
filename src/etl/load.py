@@ -41,6 +41,7 @@ def to_dynamo(covid_df):
         if count > 0:
             notification.send_sns(alert)
     except:
-        alert = "Error with adding item(s) to table" #make count if items fail
+        # make count if items fail
+        alert = "Error with adding item(s) to table"
         notification.send_sns(alert)
         print(alert)

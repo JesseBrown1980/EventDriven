@@ -6,7 +6,6 @@ import total_calc
 
 
 def lambda_handler(event, context):
-
     covid_csv = save.get_s3()
     to_dash = make_graph.transform(covid_csv)
     comparison = make_graph.by_month(to_dash)
