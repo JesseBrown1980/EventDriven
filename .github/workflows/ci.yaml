@@ -16,8 +16,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip pandas matplotlib
+      - name: Install and upgrade Pip
+        run: python -m pip install --upgrade pip
 
       - name: config aws credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -26,11 +26,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Building SAM Application
-        run: sam build -u --template template.yaml 
-
-      - name: Packaging SAM Application to S3 Bucket
-        run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }} --output-template-file .aws-sam/build/template.yaml --region ${{ secrets.AWS_REGION }}
+      - name: Building and Packaging SAM Application
+        run: sam build -u && sam package --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }} --region ${{ secrets.AWS_REGION }}
 
       - name: Deploying SAM Application to CloudFormation Stack 
         run: sam deploy --template-file .aws-sam/build/template.yaml --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --region ${{ secrets.AWS_REGION }} --no-fail-on-empty-changeset --force-upload
