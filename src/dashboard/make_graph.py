@@ -7,7 +7,7 @@ import notification
 
 
 def transform(covid_csv):
-    try:
+    try:  # format csv for matplot
         read_covid_data = pd.read_csv(
             covid_csv, usecols=['Date', 'Cases', 'Recovered', 'Deaths'])
         read_covid_data['Date'] = pd.to_datetime(
@@ -21,7 +21,7 @@ def transform(covid_csv):
 
 
 def by_month(to_dash):
-    try:
+    try:  # creates stack area graph
         plt.style.use('seaborn-darkgrid')
         comparison = to_dash.plot.area(figsize=(10, 7))
         comparison.yaxis.set_major_formatter(

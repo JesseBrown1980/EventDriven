@@ -4,7 +4,7 @@ import notification
 
 
 def transform(covid_csv):
-    try:
+    try:  # format csv and adds thousands separator
         to_dash = pd.read_csv(covid_csv,
                               usecols=['Cases', 'Recovered', 'Deaths'])
         cols = ['Cases', 'Recovered', 'Deaths']
@@ -18,7 +18,7 @@ def transform(covid_csv):
 
 
 def total_numbers(to_dash):
-    try:
+    try:  # pull last value in each column
         cases = to_dash.Cases.iat[-1]
         recovered = to_dash.Recovered.iat[-1]
         deaths = to_dash.Deaths.iat[-1]

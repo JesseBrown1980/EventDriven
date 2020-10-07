@@ -12,16 +12,14 @@ def lambda_handler(event, context):
 
     covid_df = transform.modify(nyt_url, jh_url)
 
-    # save df for dashboard data
-    try:
+    try:  # save dataframe for dashboard data
         save.df_to_s3(covid_df)
     except:
         alert = "Error passing covid dataframe to S3 save module"
         notification.send_sns(alert)
         print(alert)
 
-    # push data to DynamoDB
-    try:
+    try:  # pushe data to DynamoDB
         covid_dynamo = load.to_dynamo(covid_df)
     except:
         alert = "Error passing covid dataframe to_dynamo function"

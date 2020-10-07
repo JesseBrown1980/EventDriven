@@ -3,6 +3,9 @@ import notification
 
 
 def modify(nyt_url, jh_url):
+    # read data from both sources into a dataframe
+    # remove unwanted data, formats, and filters
+    # join dataframes on index
     try:
         nyt_df = pd.read_csv(nyt_url,
                              header=0,

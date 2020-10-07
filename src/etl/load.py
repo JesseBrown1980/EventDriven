@@ -22,7 +22,7 @@ def to_dynamo(covid_df):
         notification.send_sns(alert)
         print(alert)
 
-    try:
+    try:  # format dataframe to json and load into DynamoDB
         count = 0
         for index, item in covid_df.iterrows():
             item = json.loads(item.to_json(), parse_float=(
@@ -31,7 +31,7 @@ def to_dynamo(covid_df):
                 table.put_item(
                     Item=item, ConditionExpression=Attr('Date').not_exists())
                 count += 1
-            except ClientError as e:
+            except ClientError as e:  # block existing items from overwriting
                 if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
                     print("ConditionalCheckFailedException: {}".format(
                         item['Date']))
@@ -41,7 +41,6 @@ def to_dynamo(covid_df):
         if count > 0:
             notification.send_sns(alert)
     except:
-        # make count if items fail
         alert = "Error with adding item(s) to table"
         notification.send_sns(alert)
         print(alert)
