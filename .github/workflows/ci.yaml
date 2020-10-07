@@ -27,7 +27,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Building and Packaging SAM Application
-        run: sam build -u && sam package  --region ${{ secrets.AWS_REGION }}
+        run: sam build -u && sam package
 
       - name: Deploying SAM Application to CloudFormation Stack 
         run: sam deploy --template-file .aws-sam/build/template.yaml --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }} --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --region ${{ secrets.AWS_REGION }} --no-fail-on-empty-changeset --force-upload
