@@ -4,6 +4,11 @@ on:
   push:
     branches:
     - master
+    - '!master/unit test/**'
+    - '!master/api outputs/**'
+    - '!master/README.md'
+    - '!master/.gitignore'
+    - '!master/.gitattributes'
 
 jobs:
   deploy:
