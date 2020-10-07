@@ -31,7 +31,7 @@ Resources:
         Schedule1:
           Type: Schedule
           Properties:
-            Schedule: cron(0 16 * * ? *)
+            Schedule: cron(0 20 * * ? *)
 
   CovidTotalsFunction:
     Type: AWS::Serverless::Function

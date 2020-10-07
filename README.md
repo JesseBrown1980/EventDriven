@@ -5,7 +5,7 @@ Runs an ETL job on two data sources ([NYT](https://github.com/nytimes/covid-19-d
 
 
 ### ETL Function
-The ETL function performs an ETL job within memory on a single Lambda function and the resulting data is loaded into a DynamoDB table and saved as a CSV in S3. It is triggered each day at 16h00 using an EventBridge event and relies exclusively on Pandas and Boto3.
+The ETL function performs an ETL job within memory on a single Lambda function and the resulting data is loaded into a DynamoDB table and saved as a CSV in S3. It is triggered each day at 16h00 EST using an EventBridge event and relies exclusively on Pandas and Boto3.
 When loading the data, a conditional expression is used to block updating/overwriting existing records and only write new ones in the table. If a record fails to write, it will be noted and included when the job runs again.
 
 
