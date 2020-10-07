@@ -1,0 +1,27 @@
+name: CovidETL CI/CD
+
+on:
+  push:
+    branch:es
+        master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: config aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 ${{ secrets.AWS_REGION }}
+
+      - name: Package SAM Application to S3 Bucket
+        run: sam package --template-file template.yaml --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }} --output-template-file template.yaml --region ${{ secrets.AWS_REGION }}
+
+      - name: Deploy SAM Application to CloudFormation Stack 
+        run: sam deploy --template-file template.yaml --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --region ${{ secrets.AWS_REGION }}
