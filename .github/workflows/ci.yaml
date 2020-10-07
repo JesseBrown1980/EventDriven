@@ -3,12 +3,11 @@ name: CovidETL CI/CD
 on:
   push:
     branches:
-    - master
-    - '!master/unit test/**'
-    - '!master/api outputs/**'
-    - '!master/README.md'
-    - '!master/.gitignore'
-    - '!master/.gitattributes'
+      - master
+      - '!master/unit test/**'
+      - '!master/api outputs/**'
+      - '!master/README.md'
+      - '!master/.git**'
 
 jobs:
   deploy:
