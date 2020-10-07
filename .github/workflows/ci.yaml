@@ -35,4 +35,4 @@ jobs:
         run: sam build -u && sam package --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }}
 
       - name: Deploying SAM Application to CloudFormation Stack 
-        run: sam deploy --template-file .aws-sam/build/template.yaml --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }} --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --region ${{ secrets.AWS_REGION }} --no-fail-on-empty-changeset --force-upload
+        run: sam deploy --template-file .aws-sam/build/template.yaml --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }} --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --region ${{ secrets.AWS_REGION }} --no-fail-on-empty-changeset
