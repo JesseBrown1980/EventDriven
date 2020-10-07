@@ -2,8 +2,8 @@ name: CovidETL CI/CD
 
 on:
   push:
-    branch:es
-        master
+    branches:
+    - master
 
 jobs:
   deploy:
