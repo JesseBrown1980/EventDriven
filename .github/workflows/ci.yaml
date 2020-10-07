@@ -9,6 +9,7 @@ on:
       - 'api outputs/**'
       - '**.md'
       - '**.git**'
+      - '**openapi**'
 
 jobs:
   deploy:
