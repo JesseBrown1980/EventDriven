@@ -18,7 +18,7 @@ Resources:
     Type: AWS::Serverless::Function 
     Properties:
       MemorySize: 256
-      CodeUri: src/etl/
+      CodeUri: src/etl
       Handler: extract.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
@@ -37,7 +37,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       MemorySize: 192
-      CodeUri: src/dashboard/
+      CodeUri: src/dashboard
       Handler: make_dash.lambda_handler
       Policies:
         - S3CrudPolicy:
