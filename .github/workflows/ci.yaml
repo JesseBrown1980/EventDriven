@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: '3.8'
       - name: Install dependencies
-        run: python -m pip install --upgrade pip pandas matplotlib
+        run: python -m pip install --upgrade pip
 
       - name: config aws credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -26,8 +26,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Package SAM Application to S3 Bucket
+      - name: Building SAM Application
+        run: sam build -u --template template.yaml
+
+      - name: Packaging SAM Application to S3 Bucket
         run: sam package --template-file template.yaml --s3-bucket ${{ secrets.AWS_S3_SAM_BUCKET }} --output-template-file template.yaml --region ${{ secrets.AWS_REGION }}
 
-      - name: Deploy SAM Application to CloudFormation Stack 
+      - name: Deploying SAM Application to CloudFormation Stack 
         run: sam deploy --template-file template.yaml --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --region ${{ secrets.AWS_REGION }}
