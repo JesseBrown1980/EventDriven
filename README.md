@@ -3,6 +3,7 @@
 ## Overview
 Runs an ETL job on two data sources ([NYT](https://github.com/nytimes/covid-19-data/blob/master/us.csv?opt_id=oeu1600284808955r0.2700974837928787), [John Hopkins](https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv?opt_id=oeu1600284808955r0.2700974837928787)) and displays the data on a [dashboard](https://app.redash.io/logan-toler/public/dashboards/bQv4OpTwd8oZ2NHjT31gtjtIFiDayXu1XPK0NbTM).
 
+![Covid ETL Architecture](covid-etl-architecture.png)
 
 ### ETL Function
 - Performs an ETL job within memory on a single Lambda function and the resulting data is loaded into DynamoDB and saved as a CSV in S3.
