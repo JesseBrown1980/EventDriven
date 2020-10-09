@@ -18,13 +18,13 @@ Runs an ETL job on two data sources ([NYT](https://github.com/nytimes/covid-19-d
 - A CloudFormation template is included that provisions the necessary infrastructure (CloudFront distribution with an S3 origin) on AWS to host a dashboard.
 
 ### SNS
-An SNS topic is created to alert the amount of rows added when the ETL job completes and any run-time failures.
+An SNS topic sends an alert of amount of rows added when the ETL job completes and any run-time failures.
 
 ### CI/CD
 GitHub Actions is used to build and deploy the SAM package to AWS when a change is detected on the src folder or template.
 
 ### Current Dashboard
-The [current dashboard](https://app.redash.io/logan-toler/public/dashboards/bQv4OpTwd8oZ2NHjT31gtjtIFiDayXu1XPK0NbTM) is hosted on Redash. I will eventually move this over to the Vue.js app that I am working on.
+The [current dashboard](https://app.redash.io/logan-toler/public/dashboards/bQv4OpTwd8oZ2NHjT31gtjtIFiDayXu1XPK0NbTM) is hosted on Redash. I will eventually move this over to a Vue.js app that I am working on.
 
 SaaS dashboard solutions are very expensive and there is the additional cost of running scans/queries against a DynamoDB table to obtain the data. Using other AWS database solutions would be overkill for this challenge and still carry a high operating cost. Therefore, DynamoDB was chosen and using a custom dashboard by only using the CSV stored in S3, would further reduce the cost.
 
